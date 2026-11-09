@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>新春福慧翻翻樂</title>
+<style>
+:root{--bg1:#8f1414;--bg2:#d32222;--gold:#ffd24a;--gold2:#f5a623;--c1:#e02a2a;--c2:#a61818;--ink:#7a1010;--panel:#4a0c0c;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#6e0e0e;--bg2:#b01c1c;--panel:#3a0808}}
+:root[data-theme="dark"]{--bg1:#6e0e0e;--bg2:#b01c1c;--panel:#3a0808}
+html,body{height:100%;margin:0}
+body{background:linear-gradient(135deg,var(--bg1),var(--bg2) 55%,var(--bg1));font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--gold);overflow:hidden;user-select:none;-webkit-user-select:none}
+.dot{position:fixed;width:.9vmin;height:.9vmin;border-radius:50%;background:var(--gold2);opacity:.5;animation:fl 7s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-4vmin);opacity:.15}}
+#app{height:100%;display:flex;align-items:center;justify-content:center;gap:2.5vmin;padding:1.5vmin;box-sizing:border-box;--s:min(93vh,66vw)}
+@media (orientation:portrait){#app{flex-direction:column;--s:min(95vw,68vh)}}
+#pn{width:min(27vw,360px);background:var(--panel);border:.5vmin solid var(--gold2);border-radius:3vmin;padding:2.5vmin;text-align:center;box-sizing:border-box;position:relative;z-index:1}
+@media (orientation:portrait){#pn{width:95vw;padding:1.5vmin 3vmin}}
+.lab{font-size:clamp(12px,1.8vmin,22px);opacity:.8;margin-top:1.5vmin}
+#lv{font-size:clamp(24px,5vmin,60px);font-weight:900}
+#hp{display:flex;justify-content:center;gap:.8vmin;flex-wrap:wrap}
+.coin{width:clamp(30px,6vmin,64px);height:clamp(30px,6vmin,64px);border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff5a4a,#c01818);border:.4vmin solid var(--gold);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(16px,3.4vmin,36px);transition:.3s}
+.coin.lost{opacity:.2;filter:grayscale(1);transform:scale(.8)}
+#tip{margin-top:2vmin;background:#fbe9bd;color:var(--ink);border-radius:2vmin;padding:1.5vmin;min-height:9vmin;font-weight:700;font-size:clamp(14px,2.2vmin,26px)}
+#tip b{display:inline-block;font-size:clamp(26px,6vmin,72px);margin:0 .4vmin;opacity:.45}
+#tip b.done{opacity:1;color:#c01818}#tip b.cur{opacity:1;text-decoration:underline}
+#kb{margin-top:1.5vmin;font-size:clamp(11px,1.6vmin,18px);opacity:.7}
+@media (orientation:portrait){#kb,.lab{display:none}#hp{margin-top:.5vmin}}
+#grid{width:var(--s);height:var(--s);display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:calc(var(--s)*.022);position:relative;z-index:1}
+.card{position:relative;perspective:900px;cursor:pointer}
+.card.bad{animation:sh .4s}
+@keyframes sh{25%{transform:translateX(-5%)}75%{transform:translateX(5%)}}
+.in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .5s}
+.card.flip .in{transform:rotateY(180deg)}
+.f,.b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:calc(var(--s)*.03);border:calc(var(--s)*.007) solid var(--gold2);display:flex;align-items:center;justify-content:center;font-weight:900}
+.f{background:linear-gradient(145deg,var(--c1),var(--c2));font-size:calc(var(--s)*.13);color:var(--gold)}
+.f i{position:absolute;left:9%;top:3%;font-style:normal;font-size:calc(var(--s)*.07);color:#fff;text-shadow:0 0 .6vmin #000}
+.b{background:linear-gradient(145deg,#fff6dc,#ffe3a0);color:var(--ink);transform:rotateY(180deg);font-size:calc(var(--s)*.15)}
+.card.glow .b{box-shadow:0 0 calc(var(--s)*.05) var(--gold);background:linear-gradient(145deg,#fffbe8,#ffd24a)}
+#ov{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg1),var(--bg2));text-align:center;transition:opacity .4s;padding:4vmin;box-sizing:border-box}
+#ov.hide{opacity:0;pointer-events:none}
+#ov.soft{background:rgba(60,5,5,.88)}
+#ot{font-size:9vmin;font-weight:900}
+#ob{font-size:38vmin;font-weight:900;line-height:1.05;color:#fff;text-shadow:0 0 4vmin var(--gold2)}
+#ob.sm{font-size:7vmin;color:var(--gold)}
+#rb{display:none;margin-top:4vmin;font-size:5vmin;padding:1.5vmin 6vmin;border-radius:3vmin;border:0;background:var(--gold);color:var(--ink);font-weight:900;cursor:pointer}
+</style></head><body>
+<div id="app">
+<aside id="pn"><div class="lab">目前關卡</div><div id="lv"></div><div class="lab">福氣值</div><div id="hp"></div><div id="tip"></div><div id="kb">鍵盤輸入編號 1–16 即可翻牌</div></aside>
+<main id="grid"></main>
+</div>
+<div id="ov"><div id="ot">新春福慧翻翻樂</div><div id="ob">5</div><button id="rb">再玩一次</button></div>
+<script>
+const LV=["大家好","心自在","福慧雙全","慈悲智慧","幸福滿人間","智慧無罣礙","福慧滿人間"];
+const POOL=[...new Set("福慧滿人間處結善緣幸時心自在智無罣礙悲慈喜捨安樂和敬法鼓山禪悅光明吉祥平順如意大家好".split(""))];
+const $=id=>document.getElementById(id),wait=ms=>new Promise(r=>setTimeout(r,ms));
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let lv=0,hp=5,cards=[],els=[],order=[],step=0,phase="idle",run=0;
+for(let i=0;i<24;i++){const d=document.createElement("div");d.className="dot";d.style.left=Math.random()*100+"vw";d.style.top=Math.random()*100+"vh";d.style.animationDelay=Math.random()*6+"s";document.body.appendChild(d)}
+function ov(t,b,small,soft){$("ot").textContent=t;$("ob").textContent=b;$("ob").className=small?"sm":"";$("ov").className=soft?"soft":"";$("rb").style.display="none"}
+function hideOv(){$("ov").classList.add("hide")}
+function drawHp(){$("hp").innerHTML=[0,1,2,3,4].map(i=>'<span class="coin'+(i<hp?"":" lost")+'">福</span>').join("")}
+function drawTip(label,withPhrase){const p=[...LV[lv]];$("tip").innerHTML=label+(withPhrase?"<br>"+p.map((c,i)=>'<b class="'+(i<step?"done":i===step?"cur":"")+'">'+c+"</b>").join(""):"")}
+function build(){
+  const ph=[...LV[lv]],others=shuf(POOL.filter(c=>!ph.includes(c))).slice(0,16-ph.length);
+  const chars=shuf([...ph,...others]),nums=shuf([...Array(16)].map((_,i)=>i+1));
+  cards=chars.map((ch,i)=>({ch,num:nums[i]}));order=ph.map(c=>chars.indexOf(c));step=0;
+  $("grid").innerHTML="";els=cards.map((c,i)=>{const d=document.createElement("div");d.className="card";d.innerHTML='<div class="in"><div class="f">福<i>'+c.num+'</i></div><div class="b">'+c.ch+"</div></div>";d.onclick=()=>pick(i);$("grid").appendChild(d);return d});
+  $("lv").textContent="第 "+(lv+1)+" 關";drawHp()}
+async function startLevel(){
+  const id=++run;build();phase="show";drawTip("請看仔細…",false);await wait(1000);
+  for(const i of order){if(id!==run)return;els[i].classList.add("flip","glow");await wait(1300);els[i].classList.remove("flip","glow");await wait(500)}
+  if(id!==run)return;phase="play";drawTip("翻牌完畢！請依序點出：",true)}
+async function pick(i){
+  if(phase!=="play"||els[i].classList.contains("done"))return;
+  if(i===order[step]){els[i].classList.add("flip","glow","done");step++;drawTip("請依序點出：",true);if(step===order.length)win();return}
+  phase="busy";hp--;drawHp();els[i].classList.add("bad","flip");await wait(900);els[i].classList.remove("bad","flip");
+  if(hp<=0){lose();return}phase="play"}
+async function win(){
+  phase="done";await wait(1200);
+  if(lv===LV.length-1){ov("🎉 恭喜通關！","福慧滿人間",true,true);$("ov").classList.remove("hide");$("rb").style.display="inline-block";return}
+  ov("第 "+(lv+1)+" 關過關！","下一關字數增加",true,true);$("ov").classList.remove("hide");await wait(2200);hideOv();lv++;startLevel()}
+async function lose(){
+  phase="done";ov("福氣用盡","回到第 1 關重新挑戰",true,true);$("ov").classList.remove("hide");await wait(2800);hideOv();lv=0;hp=5;startLevel()}
+$("rb").onclick=()=>{hideOv();lv=0;hp=5;startLevel()};
+let buf="",bt;
+function commit(){const n=parseInt(buf,10);buf="";const i=cards.findIndex(c=>c.num===n);if(i>=0)pick(i)}
+addEventListener("keydown",e=>{
+  if(e.key==="Enter"){clearTimeout(bt);if(buf)commit();return}
+  if(!/^[0-9]$/.test(e.key))return;clearTimeout(bt);buf+=e.key;
+  if(buf==="0"){buf="";return}
+  if(buf==="1"){bt=setTimeout(commit,700)}else commit()});
+(async()=>{drawHp();for(let n=5;n>=1;n--){$("ob").textContent=n;await wait(1000)}hideOv();startLevel()})();
+</script></body></html>
